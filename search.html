@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Search Workers – HomeFixr</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">🔧 HomeFixr</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="search.html" class="active">Find Workers</a></li>
+      <li><a href="register_worker.html">Register as Worker</a></li>
+      <li><a href="book.html">Book a Service</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <h1>Find a Worker</h1>
+    <p>Search verified home service professionals in your city</p>
+  </div>
+
+  <div class="search-container">
+    <div class="search-box">
+      <select id="categoryFilter">
+        <option value="">All Categories</option>
+        <option value="Plumber">🔧 Plumber</option>
+        <option value="Electrician">⚡ Electrician</option>
+        <option value="Carpenter">🪚 Carpenter</option>
+        <option value="Painter">🖌️ Painter</option>
+        <option value="Cleaner">🧹 Cleaner</option>
+        <option value="AC Technician">❄️ AC Technician</option>
+      </select>
+      <input type="text" id="cityFilter" placeholder="Enter your city (e.g. Bengaluru)"/>
+      <button class="btn-primary" onclick="searchWorkers()">Search</button>
+    </div>
+  </div>
+
+  <div class="results-container">
+    <div id="results-grid" class="workers-grid">
+      <p class="loading-text">Search to find workers...</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 HomeFixr | Internship Project</p>
+  </footer>
+
+  <script>
+    // Auto-fill from URL param (e.g. from homepage service card)
+    window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('category');
+      if (cat) {
+        document.getElementById('categoryFilter').value = cat;
+        searchWorkers();
+      }
+    };
+
+    async function searchWorkers() {
+      const category = document.getElementById('categoryFilter').value;
+      const city = document.getElementById('cityFilter').value.trim();
+      const grid = document.getElementById('results-grid');
+      grid.innerHTML = '<p class="loading-text">Searching...</p>';
+
+      try {
+        const res = await fetch(`/api/workers?category=${encodeURIComponent(category)}&city=${encodeURIComponent(city)}`);
+        const data = await res.json();
+
+        if (data.length === 0) {
+          grid.innerHTML = '<p class="loading-text">No workers found. Try a different search.</p>';
+          return;
+        }
+
+        grid.innerHTML = data.map(w => `
+          <div class="worker-card">
+            <div class="worker-avatar">${w.name.charAt(0).toUpperCase()}</div>
+            <div class="worker-info">
+              <h3>${w.name}</h3>
+              <span class="badge">${w.category}</span>
+              <p>📍 ${w.city}</p>
+              <p>📞 ${w.phone}</p>
+              <p>💼 ${w.experience} yrs experience</p>
+              <p class="worker-rate">₹${w.rate}/hour</p>
+            </div>
+            <a href="book.html?worker_id=${w.id}&worker_name=${encodeURIComponent(w.name)}&category=${encodeURIComponent(w.category)}" class="btn-primary" style="margin-top:12px">Book Now</a>
+          </div>
+        `).join('');
+      } catch (err) {
+        grid.innerHTML = '<p class="loading-text error">⚠️ Cannot connect to server. Make sure you ran: python app.py.</p>';
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Service – HomeFixr</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">🔧 HomeFixr</div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="search.html">Find Workers</a></li>
+      <li><a href="register_worker.html">Register as Worker</a></li>
+      <li><a href="book.html" class="active">Book a Service</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header">
+    <h1>Book a Service</h1>
+    <p>Fill in your details and we'll connect you with the right professional</p>
+  </div>
+
+  <div class="form-container">
+    <div class="form-card">
+      <div id="form-msg"></div>
+
+      <div class="form-group">
+        <label>Your Name *</label>
+        <input type="text" id="cust_name" placeholder="e.g. Priya Sharma"/>
+      </div>
+      <div class="form-group">
+        <label>Your Phone *</label>
+        <input type="tel" id="cust_phone" placeholder="e.g. 9876543210" maxlength="10"/>
+      </div>
+      <div class="form-group">
+        <label>Your Address *</label>
+        <input type="text" id="cust_address" placeholder="e.g. 12, MG Road, Bengaluru"/>
+      </div>
+      <div class="form-group">
+        <label>Service Required *</label>
+        <select id="service_category">
+          <option value="">-- Select Service --</option>
+          <option>Plumber</option>
+          <option>Electrician</option>
+          <option>Carpenter</option>
+          <option>Painter</option>
+          <option>Cleaner</option>
+          <option>AC Technician</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Preferred Worker (optional)</label>
+        <input type="text" id="worker_name" placeholder="Worker name if you chose one"/>
+      </div>
+      <div class="form-group">
+        <label>Preferred Date *</label>
+        <input type="date" id="booking_date"/>
+      </div>
+      <div class="form-group">
+        <label>Preferred Time *</label>
+        <input type="time" id="booking_time"/>
+      </div>
+      <div class="form-group">
+        <label>Problem Description *</label>
+        <textarea id="description" rows="4" placeholder="Describe the issue or work needed..."></textarea>
+      </div>
+
+      <button class="btn-primary full-width" onclick="bookService()">Confirm Booking 📅</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>© 2025 HomeFixr | Internship Project</p>
+  </footer>
+
+  <script>
+    // Pre-fill from URL params (when coming from worker card)
+    window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('worker_name')) document.getElementById('worker_name').value = params.get('worker_name');
+      if (params.get('category')) document.getElementById('service_category').value = params.get('category');
+      // Set min date to today
+      document.getElementById('booking_date').min = new Date().toISOString().split('T')[0];
+    };
+
+    async function bookService() {
+      const cust_name = document.getElementById('cust_name').value.trim();
+      const cust_phone = document.getElementById('cust_phone').value.trim();
+      const cust_address = document.getElementById('cust_address').value.trim();
+      const service_category = document.getElementById('service_category').value;
+      const worker_name = document.getElementById('worker_name').value.trim();
+      const booking_date = document.getElementById('booking_date').value;
+      const booking_time = document.getElementById('booking_time').value;
+      const description = document.getElementById('description').value.trim();
+      const msgBox = document.getElementById('form-msg');
+
+      if (!cust_name || !cust_phone || !cust_address || !service_category || !booking_date || !booking_time || !description) {
+        msgBox.innerHTML = '<div class="msg error">⚠️ Please fill all required fields.</div>';
+        return;
+      }
+      if (cust_phone.length !== 10) {
+        msgBox.innerHTML = '<div class="msg error">⚠️ Phone must be 10 digits.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/book_service', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cust_name, cust_phone, cust_address, service_category, worker_name, booking_date, booking_time, description })
+        });
+        const data = await res.json();
+        if (data.success) {
+          msgBox.innerHTML = `<div class="msg success">✅ Booking confirmed! Your Booking ID: <strong>#${data.booking_id}</strong>. A worker will contact you soon.</div>`;
+          document.querySelectorAll('input, select, textarea').forEach(el => el.value = '');
+        } else {
+          msgBox.innerHTML = `<div class="msg error">❌ Error: ${data.message}</div>`;
+        }
+      } catch (err) {
+        msgBox.innerHTML = '<div class="msg error">⚠️ Cannot connect to server. Make sure you ran: python app.py.</div>';
+      }
+    }
+  </script>
+</body>
+</html>

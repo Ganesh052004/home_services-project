@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HomeFixr – Find Home Service Experts</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">🔧 HomeFixr</div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="search.html">Find Workers</a></li>
+      <li><a href="register_worker.html">Register as Worker</a></li>
+      <li><a href="book.html">Book a Service</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <span class="tag">India's #1 Home Services Platform</span>
+      <h1>Find Trusted <span class="highlight">Home Experts</span> Near You</h1>
+      <p>Plumbers, Electricians, Carpenters, Painters & More — Verified & Ready to Help</p>
+      <a href="search.html" class="btn-primary">Search Workers →</a>
+    </div>
+    <div class="hero-img">
+      <div class="card-float">
+        <div class="service-icon">🔧</div>
+        <div>
+          <strong>Plumber Available</strong>
+          <span>Rajesh K. • ⭐ 4.8</span>
+        </div>
+      </div>
+      <div class="card-float" style="top:55%;left:60%">
+        <div class="service-icon">⚡</div>
+        <div>
+          <strong>Electrician Online</strong>
+          <span>Sunil M. • ⭐ 4.9</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES GRID -->
+  <section class="services-section">
+    <h2>Our Services</h2>
+    <div class="services-grid">
+      <div class="service-card" onclick="location.href='search.html?category=Plumber'">
+        <span>🔧</span><p>Plumber</p>
+      </div>
+      <div class="service-card" onclick="location.href='search.html?category=Electrician'">
+        <span>⚡</span><p>Electrician</p>
+      </div>
+      <div class="service-card" onclick="location.href='search.html?category=Carpenter'">
+        <span>🪚</span><p>Carpenter</p>
+      </div>
+      <div class="service-card" onclick="location.href='search.html?category=Painter'">
+        <span>🖌️</span><p>Painter</p>
+      </div>
+      <div class="service-card" onclick="location.href='search.html?category=Cleaner'">
+        <span>🧹</span><p>Cleaner</p>
+      </div>
+      <div class="service-card" onclick="location.href='search.html?category=AC Technician'">
+        <span>❄️</span><p>AC Technician</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section">
+    <h2>How It Works</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><h3>Search</h3><p>Find workers by service category and city</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="step-num">2</div><h3>Book</h3><p>Fill a booking form with your requirements</p></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="step-num">3</div><h3>Done!</h3><p>Worker contacts you & completes the job</p></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 HomeFixr | Built for Internship Project | HTML + CSS + JS + Python Flask + MySQL</p>
+  </footer>
+
+</body>
+</html>
